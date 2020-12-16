@@ -34,9 +34,9 @@ class PFRScraper:
 
     
     @classmethod
-    def pull_table(cls, url, tableID, header = True):
+    def pull_table(cls, url, table_id, header=True):
         """
-        Pulls a table (indicated by tableID, which can be identified with
+        Pulls a table (indicated by table_id, which can be identified with
         "find_tables") from the specified url. The header option determines
         if the function should try to determine the column names and put
         them in the returned data frame. The default for header is True.
@@ -51,13 +51,14 @@ class PFRScraper:
         ## Work around comments
         comm = re.compile("<!--|-->")
         soup = bs4.BeautifulSoup(comm.sub("", res.text), 'lxml')
-        tables = soup.findAll('table', id = tableID)
+        tables = soup.findAll('table', id=table_id)
         data_rows = tables[0].findAll('tr')
         game_data = [[td.getText() for td in data_rows[i].findAll(['th','td'])]
             for i in range(len(data_rows))
             ]
         data = pandas.DataFrame(game_data)
         if header == True:
+            # TODO handle IndexError here more cleanly
             data_header = tables[0].findAll('thead')
             data_header = data_header[0].findAll("tr")
             data_header = data_header[0].findAll("th")
@@ -66,7 +67,7 @@ class PFRScraper:
                 header.append(data_header[i].getText())
             data.columns = header
             data = data.loc[data[header[0]] != header[0]]
-        data = data.reset_index(drop = True)
+        data = data.reset_index(drop=True)
         
         return data
 
