@@ -108,3 +108,6 @@ ENV/
 
 # Compiled C files
 c_*
+
+# misc, added by Kevin
+.DS_Store

@@ -8,17 +8,15 @@ if __name__ == '__main__':
     print(all_tables)
 
     for t in all_tables:
-        print(t)
         try:
-            d = PFRScraper.pull_table(url, t, header=True)
-            print(d.columns)
-        except IndexError:
-            try:
-                d = PFRScraper.pull_table(url, t, header=False)
-                print(d.iloc[0])
-            except:
-                print(f'cannot load id {t}')
-
-        print()
+            d = PFRScraper.pull_table(url, t)
+            # TODO need to add post-processing so columns is
+            # always valid
+            # right now, if header is not parsed correctly, then columns
+            # will have a bunch of None values and be useless
+            print(f'{t}: {d.columns}')
+            print()
+        except Exception as e:
+            print(e)
 
 

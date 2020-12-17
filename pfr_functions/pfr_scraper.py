@@ -32,9 +32,9 @@ class PFRScraper:
         
         return ids
 
-    
+
     @classmethod
-    def pull_table(cls, url, table_id, header=True):
+    def pull_table(cls, url, table_id):
         """
         Pulls a table (indicated by table_id, which can be identified with
         "find_tables") from the specified url. The header option determines
@@ -47,6 +47,17 @@ class PFRScraper:
         url = "http://www.pro-football-reference.com/boxscores/201702050atl.htm"
         PFRScraper.pull_table(url, "team_stats")
         """
+        try:
+            return PFRScraper.__pull_table(url, table_id, header=True)
+        except:
+            try:
+                return PFRScraper.__pull_table(url, table_id, header=False)
+            except:
+                raise RuntimeError(f"can't fetch table with id {table_id}")
+
+
+    @classmethod
+    def __pull_table(cls, url, table_id, header=True):
         res = requests.get(url)
         ## Work around comments
         comm = re.compile("<!--|-->")
